@@ -1,0 +1,65 @@
+---
+title: "MULTIVARIAT"
+author: "Naufal Fadhlullah"
+date: "2025-11-05"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Data
+
+## berikut merupakan data yang digunakan dalam CCA ini, data yang digunakan merupakan data yang diambil dari web bps dan dirapikan sedemikian rupa.
+
+```{r}
+library(readxl)
+data_bps <- read_excel("D:/Matana/Semester 5/ANALISIS MULTIVARIAT/data CCA.xlsx")
+data_bps
+```
+
+#Variabel
+
+## variabel X dan Y yang digunakan adalah sebagai berikut
+
+```{r}
+# Pisahkan X dan Y
+X <- data_bps[, c("IPM", "UMP", "Tingkat Partisipasi Angkatan Kerja")]
+Y <- data_bps[, c("TPT", "Persentase Penduduk Miskin", "Rata rata lama sekolah")]
+```
+
+# CCA CCP
+
+```{r}
+library(CCA)
+library(CCP)
+
+cca_res <- cancor(X, Y)
+
+cca_res$cor       # nilai korelasi kanonik
+```
+# Koef
+
+berikut merupakan koefisien dari variabel X dan juga variabel Y
+
+```{r}
+cca_res$xcoef     # loadings (koef variabel X)
+cca_res$ycoef     # loadings (koef variabel Y)
+```
+# wilks test
+
+melakukan wilks test
+```{r}
+# n = jumlah provinsi (baris)
+n <- nrow(X)
+p <- ncol(X)
+q <- ncol(Y)
+
+# Wilks’ lambda test
+p_asym <- p.asym(cca_res$cor, n, p, q, tstat = "Wilks")
+p_asym  
+```
+# interpretasi
+
+berdasarkan hasil uji wilks', didapatkan hasil bahwa pasangan kanonik 1 dengan 3 dan 2 dengan 3 menunjukkan hasil yang signifikan . namun, pasangan kombinasi kanonik ketiga menunjukkan nilai p-value yang lebih besar daripada 0.005 sehingga hal ini membuktikan bahwa kombinasi kanonik ketiga tidak signifikan.
